@@ -2,14 +2,11 @@ import * as Blockly from 'blockly/core';
 import 'blockly/blocks';
 import 'blockly/msg/pt-br';
 
-import { reportError, clearErrors } from './utils/error.js';
-
 import './style/main.css';
 import './blocks/core/reg.js';
 import './blocks/core/mem.js';
 import './blocks/core/im.js';
 
-import { addValidationListener } from './utils/validationListener.js';
 import { toolbox } from './toolbox/toolbox.js';
 import { load, save } from './serialization.js';
 
@@ -39,6 +36,10 @@ import './blocks/control/jge.js';
 import './blocks/control/jl.js';
 import './blocks/control/jle.js';
 
+import { buildAST } from './ast/builder.js';
+import { validateProgram } from './validation/index.js';
+import { ErrorManager } from './ui/ErrorManager.js';
+
 import assemblyGenerator from './generators/assembly.js';
 import jsonGenerator from './generators/json.js';
 
@@ -54,9 +55,16 @@ const workspace = Blockly.inject(document.getElementById('blocklyDiv'), {
   zoom: { wheel: true, startScale: 1 }
 });
 
+const errorManager = new ErrorManager(workspace);
+
 // Load saved workspace
 load(workspace);
-addValidationListener(workspace);
+// workspace.addChangeListener(() => {
+//   errorManager.clearAll();
+//   const ast = buildAST(workspace);
+//   const errors = validateProgram(ast);
+//   errorManager.showErrors(errors);
+// });
 
 // a run button and code output panel
 const controls = document.createElement('div');
@@ -98,6 +106,17 @@ document.body.appendChild(controls);
 
 // -------------------- buttons ---------------------------
 runBtn.addEventListener('click', () => {
+  errorManager.clearAll();
+
+  const ast = buildAST(workspace);
+  const errors = validateProgram(ast);
+
+  if (errors.length > 0) {
+    errorManager.showErrors(errors);
+    output.textContent = errors.map(e => e.message).join('\n');
+    return;
+  }
+
   try {
     const code = jsonGenerator.workspaceToCode(workspace);
     output.textContent = code;
@@ -108,25 +127,23 @@ runBtn.addEventListener('click', () => {
 });
 
 btnASM.addEventListener('click', () => {
+  errorManager.clearAll();
+
+  const ast = buildAST(workspace);
+  const errors = validateProgram(ast);
+
+  if (errors.length > 0) {
+    errorManager.showErrors(errors);
+    output.textContent = errors.map(e => e.message).join('\n');
+    return;
+  }
+
   try {
     const code = assemblyGenerator.workspaceToCode(workspace);
     output.textContent = code;
   } catch (e) {
     output.textContent = 'Erro Assembly: ' + e.message;
     console.error(e);
-  }
-});
-
-// checking errors
-workspace.addChangeListener(() => {
-  clearErrors(workspace);
-
-  const blocks = workspace.getAllBlocks(false);
-  for (const block of blocks) {
-    if (typeof block.validate === "function") {
-      const error = block.validate(workspace, output);
-      if (error) break; 
-    }
   }
 });
 

@@ -8,11 +8,11 @@ Blockly.Blocks["addw"] = {
       .appendField("addw");
 
     this.appendValueInput("B")
-      .setCheck([TYPES.ALU_SRC_REG])
+      .setCheck([TYPES.ALU_SRC_REG, TYPES.ALU_SRC_MEM])
       .appendField(",");
 
     this.appendValueInput("DEST")
-      .setCheck([TYPES.ALU_DEST])
+      .setCheck([TYPES.ALU_DEST, TYPES.ALU_SRC_MEM])
       .appendField(",");
 
     this.setPreviousStatement(true);

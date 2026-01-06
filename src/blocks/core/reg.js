@@ -6,9 +6,9 @@ Blockly.Blocks['reg_A'] = {
     this.appendDummyInput()
       .appendField("%A");
     this.setOutput(true, [
-      TYPES.REG, 
-      TYPES.ALU_SRC_REG
-    ]);
+      TYPES.ALU_SRC_REG,
+      TYPES.ALU_DEST
+]);
     this.setColour(180);
     this.setTooltip("Registrador %A");
   }
