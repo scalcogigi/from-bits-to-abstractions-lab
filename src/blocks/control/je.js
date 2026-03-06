@@ -3,7 +3,7 @@ import { TYPES } from "../core/types.js";
 
 Blockly.Blocks["je"] = {
   init: function () {
-    this.appendValueInput("REG").setCheck([TYPES.REG]).appendField("je");
+    this.appendDummyInput().appendField("je");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(120);

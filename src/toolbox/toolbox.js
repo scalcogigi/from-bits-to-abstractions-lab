@@ -43,7 +43,7 @@ export const toolbox = {
     },
     {
       'kind': 'category',
-      'name': 'Controle',
+      'name': 'Controle de Fluxo',
       'colour': '#27AE60',
       'contents': [
         { kind: "block", type: "label" },

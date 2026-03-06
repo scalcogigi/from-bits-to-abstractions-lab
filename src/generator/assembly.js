@@ -39,27 +39,6 @@ function collectLabels(blocks) {
   return { labels };
 }
 
-// valida jumps
-function validateJumps(blocks, labels) {
-  for (const block of blocks) {
-    if (
-      ["je", "jne", "jg", "jge", "jl", "jle"].includes(block.type)
-    ) {
-      const regBlock = block.getInputTargetBlock("REG");
-      if (value(block, "REG") === null)
-      if (!block.getInputTargetBlock("REG")) {
-        return `Jump sem registrador em ${block.type}`;
-    }
-      if (!regBlock) return `Jump sem registrador em ${block.type}`;
-      continue;
-    }
-    if (block.type === "jmp") {
-      continue;
-    }
-  }
-  return null;
-}
-
 // instruções
 assemblyGenerator.forBlock['leaw'] = function (block) {
   const c = value(block, 'CONST');
@@ -125,14 +104,19 @@ assemblyGenerator.forBlock['label'] = function(block) {
   return `${name}:`;
 };
 
+assemblyGenerator.forBlock["comment"] = function(block) {
+  const text = block.getFieldValue("TEXT");
+  return `# ${text}`;
+};
+
 // jump labels
 assemblyGenerator.forBlock["jmp"] = () => `jmp`;
-assemblyGenerator.forBlock["je"] = (block) => `je ${value(block, "REG")}`;
-assemblyGenerator.forBlock["jne"] = (block) => `jne ${value(block, "REG")}`;
-assemblyGenerator.forBlock["jg"] = (block) => `jg ${value(block, "REG")}`;
-assemblyGenerator.forBlock["jge"] = (block) => `jge ${value(block, "REG")}`;
-assemblyGenerator.forBlock["jl"] = (block) => `jl ${value(block, "REG")}`;
-assemblyGenerator.forBlock["jle"] = (block) => `jle ${value(block, "REG")}`;
+assemblyGenerator.forBlock["je"] = (block) => `je`;
+assemblyGenerator.forBlock["jne"] = (block) => `jne`;
+assemblyGenerator.forBlock["jg"] = (block) => `jg`;
+assemblyGenerator.forBlock["jge"] = (block) => `jge`;
+assemblyGenerator.forBlock["jl"] = (block) => `jl`;
+assemblyGenerator.forBlock["jle"] = (block) => `jle`;
 
 // terminais
 assemblyGenerator.forBlock["im"] = function(block) {
@@ -165,19 +149,12 @@ assemblyGenerator.workspaceToCode = function (workspace) {
     return "";
   }
 
-  const jumpError = validateJumps(blocks, labelInfo.labels);
-  if (jumpError) {
-    reportError(blocks[0], jumpError, this.outputPanel);
-    return "";
-  }
-
   const executable = blocks.filter(b =>
     typeof assemblyGenerator.forBlock[b.type] === "function" &&
     !b.isInFlyout &&
     !b.isShadow() &&
     b.type !== "program" &&
     b.type !== "start" &&
-    b.type !== "comment" &&
     b.type !== "object" &&
     b.type !== "member"
   );

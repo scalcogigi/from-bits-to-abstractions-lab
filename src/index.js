@@ -40,7 +40,7 @@ import { buildAST } from './ast/builder.js';
 import { validateProgram } from './validation/index.js';
 import { ErrorManager } from './ui/ErrorManager.js';
 
-import assemblyGenerator from './generators/assembly.js';
+import assemblyGenerator from './generator/assembly.js';
 
 console.log("assemblyGenerator:", assemblyGenerator);
 
