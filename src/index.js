@@ -41,9 +41,7 @@ import { validateProgram } from './validation/index.js';
 import { ErrorManager } from './ui/ErrorManager.js';
 
 import assemblyGenerator from './generators/assembly.js';
-import jsonGenerator from './generators/json.js';
 
-console.log("jsonGenerator:", jsonGenerator);
 console.log("assemblyGenerator:", assemblyGenerator);
 
 // create workspace
@@ -59,73 +57,8 @@ const errorManager = new ErrorManager(workspace);
 
 // Load saved workspace
 load(workspace);
-// workspace.addChangeListener(() => {
-//   errorManager.clearAll();
-//   const ast = buildAST(workspace);
-//   const errors = validateProgram(ast);
-//   errorManager.showErrors(errors);
-// });
-
-// a run button and code output panel
-const controls = document.createElement('div');
-controls.style.position = 'absolute';
-controls.style.right = '8px';
-controls.style.top = '8px';
-controls.style.zIndex = '999';
-controls.style.background = 'rgba(255,255,255,0.9)';
-controls.style.padding = '10px';
-controls.style.borderRadius = '8px';
-controls.style.display = 'flex';
-controls.style.flexDirection = 'column';
-controls.style.gap = '8px';
-
-// button - generate json
-const runBtn = document.createElement('button');
-runBtn.textContent = 'Gerar JSON';
-controls.appendChild(runBtn);
-
-// assembly - generate assembly
-const btnASM = document.createElement('button');
-btnASM.textContent = 'Gerar Assembly';
-controls.appendChild(btnASM);
-
-// output
-const output = document.createElement('pre');
-output.id = 'output';
-output.style.whiteSpace = 'pre-wrap';
-output.style.fontFamily = 'monospace';
-output.style.fontSize = '13px';
-output.style.height = '60vh';
-output.style.overflow = 'auto';
-output.style.marginTop = '8px';
-output.style.padding = '8px';
-output.style.border = '1px solid #ddd';
-controls.appendChild(output);
-
-document.body.appendChild(controls);
 
 // -------------------- buttons ---------------------------
-runBtn.addEventListener('click', () => {
-  errorManager.clearAll();
-
-  const ast = buildAST(workspace);
-  const errors = validateProgram(ast);
-
-  if (errors.length > 0) {
-    errorManager.showErrors(errors);
-    output.textContent = errors.map(e => e.message).join('\n');
-    return;
-  }
-
-  try {
-    const code = jsonGenerator.workspaceToCode(workspace);
-    output.textContent = code;
-  } catch (e) {
-    output.textContent = 'Erro JSON: ' + e.message;
-    console.error(e);
-  }
-});
-
 btnASM.addEventListener('click', () => {
   errorManager.clearAll();
 
@@ -145,6 +78,10 @@ btnASM.addEventListener('click', () => {
     output.textContent = 'Erro Assembly: ' + e.message;
     console.error(e);
   }
+});
+
+btnCopy.addEventListener('click', () => {
+  navigator.clipboard.writeText(output.textContent);
 });
 
 // auto-save

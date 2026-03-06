@@ -1,11 +1,9 @@
 import * as Blockly from 'blockly/core';
 
-const jsonGenerator = new Blockly.Generator('JSON');
 const Order = { ATOMIC: 0 };
 
 // auxiliares
 function value(block, name) {
-  const tuple = jsonGenerator.valueToCode(block, name, Order.ATOMIC);
   if (!tuple) return null;
   if (Array.isArray(tuple)) return tuple[0];
   return tuple;

@@ -2,9 +2,36 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: #f8f8f8;
 }
-
 #output {
-  border-left: 2px solid #ccc;
-  font-family: 'Courier New', monospace;
+  margin-top: 10px;
+  background: #111827;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-y: auto;
+  font-family: monospace;
   font-size: 14px;
+  flex: 1;
+}
+
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+#blocklyDiv {
+  flex: 1;
+}
+
+#assemblyPanel {
+  width: 40%;
+  background: #0f172a;
+  color: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+}
+
+.assemblyHeader {
+  display: flex;
+  gap: 8px;
 }
