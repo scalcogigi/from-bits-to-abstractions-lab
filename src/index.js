@@ -59,40 +59,18 @@ function enableToolboxHover(workspace) {
   const toolbox = workspace.getToolbox();
   if (!toolbox) return;
 
-  let closeTimeout = null;
-
   setTimeout(() => {
     const categoryElements = document.querySelectorAll('.blocklyToolboxCategory');
-    const flyout = document.querySelector('.blocklyFlyout');
-    if (!categoryElements.length || !flyout) return;
-
-    const cancelClose = () => {
-      if (closeTimeout) {
-        clearTimeout(closeTimeout);
-        closeTimeout = null;
-      }
-    };
-
-    const scheduleClose = () => {
-      cancelClose();
-      closeTimeout = setTimeout(() => {
-        toolbox.clearSelection();
-      }, 250);
-    };
 
     categoryElements.forEach((element) => {
       element.addEventListener('mouseenter', () => {
-        cancelClose();
         const items = toolbox.getToolboxItems();
         const category = items.find(item => item.id_ === element.id);
         if (category && toolbox.getSelectedItem() !== category) {
           toolbox.setSelectedItem(category);
         }
       });
-      element.addEventListener('mouseleave', scheduleClose);
     });
-    flyout.addEventListener('mouseenter', cancelClose);
-    flyout.addEventListener('mouseleave', scheduleClose);
   }, 0); 
 }
 
@@ -102,12 +80,7 @@ const btnASM = document.getElementById('btnASM');
 const btnCopy = document.getElementById('btnCopy');
 const output = document.getElementById('output');
 
-// Load saved workspace
-load(workspace);
-
-
-// -------------------- buttons ---------------------------
-btnASM.addEventListener('click', () => {
+function updateAssembly() {
   errorManager.clearAll();
 
   const ast = buildAST(workspace);
@@ -126,13 +99,55 @@ btnASM.addEventListener('click', () => {
     output.textContent = 'Erro Assembly: ' + e.message;
     console.error(e);
   }
-});
+}
+
+// Load saved workspace
+load(workspace);
+updateAssembly();
+
+
+// -------------------- buttons ---------------------------
+// btnASM.addEventListener('click', () => {
+//   errorManager.clearAll();
+
+//   const ast = buildAST(workspace);
+//   const errors = validateProgram(ast);
+
+//   if (errors.length > 0) {
+//     errorManager.showErrors(errors);
+//     output.textContent = errors.map(e => e.message).join('\n');
+//     return;
+//   }
+
+//   try {
+//     const code = assemblyGenerator.workspaceToCode(workspace);
+//     output.textContent = code;
+//   } catch (e) {
+//     output.textContent = 'Erro Assembly: ' + e.message;
+//     console.error(e);
+//   }
+// });
+
+btnASM.addEventListener('click', updateAssembly);
 
 btnCopy.addEventListener('click', () => {
   navigator.clipboard.writeText(output.textContent);
 });
 
-// auto-save
-workspace.addChangeListener(() => {
+// // auto-save
+// workspace.addChangeListener(() => {
+//   save(workspace);
+// });
+
+let updateTimeout = null;
+
+workspace.addChangeListener((event) => {
+  if (event.type === Blockly.Events.UI) return;
+
   save(workspace);
+
+  if (updateTimeout) clearTimeout(updateTimeout);
+  updateTimeout = setTimeout(() => {
+    updateAssembly();
+  }, 150); 
 });
