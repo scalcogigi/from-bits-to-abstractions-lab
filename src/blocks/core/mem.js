@@ -4,9 +4,8 @@ import { TYPES } from './types.js';
 Blockly.Blocks['mem'] = {
   init: function () {
     this.appendDummyInput()
-      .appendField("memória")
       .appendField("(%A)");
-    this.setOutput(true, [TYPES.MEM, TYPES.ALU_SRC_MEM]);
+    this.setOutput(true, [TYPES.MEM]);
     this.setColour(200);
     this.setTooltip("Acesso à memória no endereço %A.");
   }

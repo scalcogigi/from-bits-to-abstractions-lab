@@ -4,7 +4,7 @@ import { TYPES } from "../core/types.js";
 Blockly.Blocks["leaw"] = {
   init: function () {
     this.appendValueInput("CONST")
-      .setCheck([TYPES.IMM])
+      .setCheck([TYPES.IMM, TYPES.LABEL_REF])
       .appendField("leaw");
 
     this.appendDummyInput().appendField(", %A");

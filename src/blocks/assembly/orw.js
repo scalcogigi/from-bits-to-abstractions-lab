@@ -4,15 +4,15 @@ import { TYPES } from "../core/types.js";
 Blockly.Blocks["orw"] = {
   init: function () {
     this.appendValueInput("A")
-      .setCheck([TYPES.ALU_SRC_REG, TYPES.ALU_SRC_MEM])
+      .setCheck([TYPES.REG, TYPES.MEM])
       .appendField("orw");
 
     this.appendValueInput("B")
-      .setCheck(TYPES.ALU_SRC_REG)
+      .setCheck(TYPES.REG)
       .appendField(",");
 
     this.appendValueInput("DEST")
-      .setCheck(TYPES.ALU_DEST)
+      .setCheck(TYPES.REG)
       .appendField(",");
 
     this.setPreviousStatement(true);

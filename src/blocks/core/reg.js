@@ -6,8 +6,7 @@ Blockly.Blocks['reg_A'] = {
     this.appendDummyInput()
       .appendField("%A");
     this.setOutput(true, [
-      TYPES.ALU_SRC_REG,
-      TYPES.ALU_DEST
+      TYPES.REG
 ]);
     this.setColour(180);
     this.setTooltip("Registrador %A");
@@ -19,16 +18,12 @@ Blockly.Blocks['reg_D'] = {
     this.appendDummyInput()
       .appendField("%D");
     this.setOutput(true, [
-      TYPES.REG,
-      TYPES.REG_NO_A,
-      TYPES.ALU_SRC_REG,
-      TYPES.ALU_DEST
+      TYPES.REG
     ]);
     this.setColour(180);
     this.setTooltip("Registrador %D.");
   }
 };
-
 
 // Prevents students from typing invalid registers and standardizes operators
 // registers %A, %D

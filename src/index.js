@@ -14,8 +14,7 @@ import './blocks/structure/program.js';
 import './blocks/structure/start.js';
 import './blocks/structure/comment.js';
 
-import './blocks/assembly/movw_reg.js';
-import './blocks/assembly/movw_mem.js';
+import './blocks/assembly/movw.js';
 import './blocks/assembly/leaw.js';
 import './blocks/assembly/addw.js';
 import './blocks/assembly/subw.js';
@@ -26,6 +25,7 @@ import './blocks/assembly/notw.js';
 import './blocks/assembly/negw.js';
 import './blocks/assembly/andw.js';
 import './blocks/assembly/orw.js';
+import './blocks/assembly/nop.js';
 
 import './blocks/control/label.js';
 import './blocks/control/jmp.js';

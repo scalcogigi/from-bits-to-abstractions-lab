@@ -27,8 +27,7 @@ export const toolbox = {
       'name': 'Instruções',
       'colour': '#2980B9',
       'contents': [
-        { kind: "block", type: "movw_reg" },
-		{ kind: "block", type: "movw_mem" },
+        { kind: "block", type: "movw" },
         { kind: "block", type: "leaw" },
         { kind: "block", type: "addw" },
         { kind: "block", type: "subw" },
@@ -36,6 +35,7 @@ export const toolbox = {
         { kind: "block", type: "incw" },
         { kind: "block", type: "decw" },
         { kind: "block", type: "notw" },
+        { kind: "block", type: "nop" },
         { kind: "block", type: "negw" },
         { kind: "block", type: "andw" },
         { kind: "block", type: "orw" },

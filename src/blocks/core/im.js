@@ -4,15 +4,9 @@ import { TYPES } from './types.js';
 Blockly.Blocks['im'] = {
   init: function () {
     this.appendDummyInput()
-      .appendField("imediato")
+      .appendField("constante")
       .appendField(
-        new Blockly.FieldDropdown([
-          ["$1", "$1"],
-          ["$0", "$0"],
-          ["$-1", "$-1"]
-        ]),
-        "VALUE"
-      );
+        new Blockly.FieldNumber(0, -32768, 32767, 1), "VALUE");
     this.setOutput(true, [TYPES.IMM]);
     this.setColour(160);
     this.setTooltip("Imediatos válidos da arquitetura: $1, $0 e $-1");

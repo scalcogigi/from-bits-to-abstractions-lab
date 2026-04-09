@@ -45,7 +45,7 @@ assemblyGenerator.forBlock['leaw'] = function (block) {
   return `leaw ${c}, %A`;
 };
 
-assemblyGenerator.forBlock['movw_reg'] = assemblyGenerator.forBlock['movw_mem'] = function(block) {
+assemblyGenerator.forBlock['movw'] = assemblyGenerator.forBlock['movw'] = function(block) {
   return `movw ${value(block,"SRC")}, ${value(block,"DEST")}`;
 };
 
@@ -78,6 +78,10 @@ assemblyGenerator.forBlock["notw"] = function (block) {
   return `notw ${r}`;
 };
 
+assemblyGenerator.forBlock["nop"] = function() {
+  return "nop";
+};
+
 assemblyGenerator.forBlock["negw"] = function (block) {
   const r = value(block, "REG");
   return `negw ${r}`;
@@ -101,6 +105,13 @@ assemblyGenerator.forBlock["orw"] = function (block) {
 
 assemblyGenerator.forBlock['label'] = function(block) {
   const name = block.getFieldValue('NAME');
+
+  // se estiver conectado como valor
+  if (block.outputConnection && block.outputConnection.targetConnection) {
+    return [name, Order.ATOMIC];
+  }
+
+  // se for definição
   return `${name}:`;
 };
 
@@ -108,7 +119,6 @@ assemblyGenerator.forBlock["comment"] = function(block) {
   const text = block.getFieldValue("TEXT");
   return `# ${text}`;
 };
-
 // jump labels
 assemblyGenerator.forBlock["jmp"] = () => `jmp`;
 assemblyGenerator.forBlock["je"] = (block) => `je`;
@@ -121,7 +131,7 @@ assemblyGenerator.forBlock["jle"] = (block) => `jle`;
 // terminais
 assemblyGenerator.forBlock["im"] = function(block) {
   const val = block.getFieldValue("VALUE");
-  return [val, Order.ATOMIC];
+  return [`$${val}`, Order.ATOMIC];
 };
 
 assemblyGenerator.forBlock["mem"] = function(block) {
