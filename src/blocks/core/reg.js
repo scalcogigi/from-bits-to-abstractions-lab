@@ -8,7 +8,7 @@ Blockly.Blocks['reg_A'] = {
     this.setOutput(true, [
       TYPES.REG
 ]);
-    this.setColour(180);
+    this.setColour(200);
     this.setTooltip("Registrador %A");
   }
 };
@@ -20,7 +20,7 @@ Blockly.Blocks['reg_D'] = {
     this.setOutput(true, [
       TYPES.REG
     ]);
-    this.setColour(180);
+    this.setColour(200);
     this.setTooltip("Registrador %D.");
   }
 };

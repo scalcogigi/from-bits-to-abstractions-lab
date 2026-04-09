@@ -9,7 +9,7 @@ Blockly.Blocks["negw"] = {
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setColour(200);
+    this.setColour(230);
 
     this.setTooltip("NEGW: aplica negação aritmética (valor → -valor).");
   },

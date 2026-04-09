@@ -17,7 +17,7 @@ Blockly.Blocks["andw"] = {
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setColour(180);
+    this.setColour(230);
     this.setTooltip(
       "ANDW: operação lógica AND entre A e B. Não aceita imediatos e não permite mem AND mem."
     );

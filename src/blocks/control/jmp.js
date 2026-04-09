@@ -5,6 +5,6 @@ Blockly.Blocks["jmp"] = {
     this.appendDummyInput().appendField("jmp");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setColour(100);
+    this.setColour(120);
   },
 };

@@ -17,7 +17,7 @@ Blockly.Blocks["orw"] = {
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setColour(180);
+    this.setColour(230);
     this.setTooltip(
       "ORW: operação lógica OR. Não aceita imediatos e não permite mem OR mem."
     );

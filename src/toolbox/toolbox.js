@@ -3,19 +3,10 @@ export const toolbox = {
   'contents': [
     {
       'kind': 'category',
-      'name': 'Estrutura',
-      'colour': '#34495E',
-      'contents': [
-        { kind: "block", type: "program" },
-        { kind: "block", type: "start" },
-        { kind: "block", type: "comment" }
-      ]
-    },
-    {
-      'kind': 'category',
       'name': 'Operandos',
       'colour': '#8E44AD',
       'contents': [
+    { kind: "block", type: "comment" },
 		{ kind: "block", type: "reg_A" },
 		{ kind: "block", type: "reg_D" },
 		{ kind: 'block', type: 'mem' },
@@ -27,6 +18,7 @@ export const toolbox = {
       'name': 'Instruções',
       'colour': '#2980B9',
       'contents': [
+        { kind: "block", type: "comment" },
         { kind: "block", type: "movw" },
         { kind: "block", type: "leaw" },
         { kind: "block", type: "addw" },
@@ -43,9 +35,10 @@ export const toolbox = {
     },
     {
       'kind': 'category',
-      'name': 'Controle de Fluxo',
+      'name': 'Jumps',
       'colour': '#27AE60',
       'contents': [
+        { kind: "block", type: "comment" },
         { kind: "block", type: "label" },
         { kind: "block", type: "jmp" },
         { kind: "block", type: "je" },

@@ -11,7 +11,7 @@ Blockly.Blocks["leaw"] = {
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setColour(210);
+    this.setColour(230);
 
     this.setTooltip("Carrega imediato em %A. Sempre escreve em %A.");
   },

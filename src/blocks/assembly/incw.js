@@ -6,6 +6,6 @@ Blockly.Blocks["incw"] = {
     this.appendValueInput("REG").setCheck([TYPES.REG]).appendField("incw");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setColour(200);
+    this.setColour(230);
   },
 };

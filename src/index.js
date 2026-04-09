@@ -53,10 +53,36 @@ const workspace = Blockly.inject(document.getElementById('blocklyDiv'), {
   zoom: { wheel: true, startScale: 1 }
 });
 
+enableToolboxHover(workspace); 
+
+function enableToolboxHover(workspace) {
+  const toolbox = workspace.getToolbox();
+  if (!toolbox) return;
+
+  setTimeout(() => {
+    const categoryElements = document.querySelectorAll('.blocklyToolboxCategory');
+
+    categoryElements.forEach((element) => {
+      element.addEventListener('mouseenter', () => {
+        const items = toolbox.getToolboxItems();
+        const category = items.find(item => item.id_ === element.id);
+        if (category && toolbox.getSelectedItem() !== category) {
+          toolbox.setSelectedItem(category);
+        }
+      });
+    });
+  }, 0); 
+}
+
 const errorManager = new ErrorManager(workspace);
+
+const btnASM = document.getElementById('btnASM');
+const btnCopy = document.getElementById('btnCopy');
+const output = document.getElementById('output');
 
 // Load saved workspace
 load(workspace);
+
 
 // -------------------- buttons ---------------------------
 btnASM.addEventListener('click', () => {

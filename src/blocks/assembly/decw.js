@@ -9,7 +9,7 @@ Blockly.Blocks["decw"] = {
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setColour(200);
+    this.setColour(230);
 
     this.setTooltip("DECW: decrementa o registrador em 1. Não aceita memória.");
   },
