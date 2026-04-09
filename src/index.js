@@ -76,7 +76,6 @@ function enableToolboxHover(workspace) {
 
 const errorManager = new ErrorManager(workspace);
 
-const btnASM = document.getElementById('btnASM');
 const btnCopy = document.getElementById('btnCopy');
 const output = document.getElementById('output');
 
@@ -94,6 +93,13 @@ function updateAssembly() {
 
   try {
     const code = assemblyGenerator.workspaceToCode(workspace);
+    const trimmedCode = code.trim();
+
+    if (!trimmedCode) {
+      output.textContent = '';
+      return;
+    }
+
     output.textContent = code;
   } catch (e) {
     output.textContent = 'Erro Assembly: ' + e.message;
@@ -107,37 +113,21 @@ updateAssembly();
 
 
 // -------------------- buttons ---------------------------
-// btnASM.addEventListener('click', () => {
-//   errorManager.clearAll();
 
-//   const ast = buildAST(workspace);
-//   const errors = validateProgram(ast);
+const btnNew = document.getElementById('btnNew');
 
-//   if (errors.length > 0) {
-//     errorManager.showErrors(errors);
-//     output.textContent = errors.map(e => e.message).join('\n');
-//     return;
-//   }
-
-//   try {
-//     const code = assemblyGenerator.workspaceToCode(workspace);
-//     output.textContent = code;
-//   } catch (e) {
-//     output.textContent = 'Erro Assembly: ' + e.message;
-//     console.error(e);
-//   }
-// });
-
-btnASM.addEventListener('click', updateAssembly);
+btnNew.addEventListener('click', () => {
+  if (confirm('Deseja iniciar um novo workspace? Todo o conteúdo atual será apagado.')) {
+    workspace.clear(); 
+    errorManager.clearAll();
+    output.textContent = '';
+    localStorage.removeItem('jsonGeneratorWorkspace'); 
+  }
+});
 
 btnCopy.addEventListener('click', () => {
   navigator.clipboard.writeText(output.textContent);
 });
-
-// // auto-save
-// workspace.addChangeListener(() => {
-//   save(workspace);
-// });
 
 let updateTimeout = null;
 
@@ -149,5 +139,5 @@ workspace.addChangeListener((event) => {
   if (updateTimeout) clearTimeout(updateTimeout);
   updateTimeout = setTimeout(() => {
     updateAssembly();
-  }, 150); 
+  }, 150);
 });
