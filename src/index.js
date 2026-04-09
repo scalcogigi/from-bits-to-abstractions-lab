@@ -59,18 +59,40 @@ function enableToolboxHover(workspace) {
   const toolbox = workspace.getToolbox();
   if (!toolbox) return;
 
+  let closeTimeout = null;
+
   setTimeout(() => {
     const categoryElements = document.querySelectorAll('.blocklyToolboxCategory');
+    const flyout = document.querySelector('.blocklyFlyout');
+    if (!categoryElements.length || !flyout) return;
+
+    const cancelClose = () => {
+      if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        closeTimeout = null;
+      }
+    };
+
+    const scheduleClose = () => {
+      cancelClose();
+      closeTimeout = setTimeout(() => {
+        toolbox.clearSelection();
+      }, 250);
+    };
 
     categoryElements.forEach((element) => {
       element.addEventListener('mouseenter', () => {
+        cancelClose();
         const items = toolbox.getToolboxItems();
         const category = items.find(item => item.id_ === element.id);
         if (category && toolbox.getSelectedItem() !== category) {
           toolbox.setSelectedItem(category);
         }
       });
+      element.addEventListener('mouseleave', scheduleClose);
     });
+    flyout.addEventListener('mouseenter', cancelClose);
+    flyout.addEventListener('mouseleave', scheduleClose);
   }, 0); 
 }
 
