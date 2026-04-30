@@ -7,7 +7,8 @@ const Order = { ATOMIC: 0 };
 
 // Auxiliares
 function value(block, name) {
-  return assemblyGenerator.valueToCode(block, name, Order.ATOMIC) || null;
+  const v = assemblyGenerator.valueToCode(block, name, Order.ATOMIC);
+  return v === null || v === undefined ? "" : v;
 }
 
 // coletar blocos
@@ -178,6 +179,7 @@ assemblyGenerator.workspaceToCode = function (workspace) {
 })
 .filter(line => line.length > 0)
 .join("\n") + "\n";
+
 
 };
 

@@ -4,7 +4,7 @@ import { TYPES } from "../core/types.js";
 Blockly.Blocks["decw"] = {
   init: function () {
     this.appendValueInput("REG")
-      .setCheck([TYPES.REG])
+      .setCheck([TYPES.REG_DEST])
       .appendField("decw");
 
     this.setPreviousStatement(true);

@@ -6,8 +6,9 @@ Blockly.Blocks['im'] = {
     this.appendDummyInput()
       .appendField("constante")
       .appendField(
-        new Blockly.FieldNumber(0, -32768, 32767, 1), "VALUE");
+        new Blockly.FieldNumber(0, 0, 65535, 1), "VALUE");
     this.setOutput(true, [TYPES.IMM]);
+    this.setOutputShape(2);
     this.setColour(200);
     this.setTooltip("Imediatos válidos da arquitetura: $1, $0 e $-1");
   }

@@ -8,6 +8,7 @@ Blockly.Blocks["label"] = {
       .appendField(new Blockly.FieldTextInput("LOOP"), "NAME")
 
     this.setOutput(true, [TYPES.LABEL_REF]);
+    this.setOutputShape(2);
       
     this.setPreviousStatement(true);
     this.setNextStatement(true);

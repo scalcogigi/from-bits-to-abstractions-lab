@@ -8,7 +8,7 @@ Blockly.Blocks["movw"] = {
       .appendField("movw");
 
     this.appendValueInput("DEST")
-      .setCheck([TYPES.REG, TYPES.MEM])
+      .setCheck([TYPES.REG_DEST, TYPES.MEM])
       .appendField(",");
 
     this.setPreviousStatement(true);
@@ -17,3 +17,4 @@ Blockly.Blocks["movw"] = {
     this.setTooltip("Move dados entre registrador e memória.");
   },
 };
+

@@ -3,13 +3,12 @@ import { TYPES } from "../core/types.js";
 
 Blockly.Blocks["nop"] = {
   init: function () {
-    this.appendValueInput("OPERAND")
-      .setCheck([TYPES.REG, TYPES.MEM])
+    this.appendDummyInput()
       .appendField("nop");
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setColour(230);
+    this.setColour(120);
     this.setTooltip("Pode opcionalmente acessar um registrador ou a memória (%A) sem alterar o estado.");
   }
 };

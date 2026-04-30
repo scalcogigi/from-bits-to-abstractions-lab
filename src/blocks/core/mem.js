@@ -6,6 +6,7 @@ Blockly.Blocks['mem'] = {
     this.appendDummyInput()
       .appendField("(%A)");
     this.setOutput(true, [TYPES.MEM]);
+    this.setOutputShape(3);
     this.setColour(200);
     this.setTooltip("Acesso à memória no endereço %A.");
   }

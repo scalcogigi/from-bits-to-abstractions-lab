@@ -12,7 +12,7 @@ Blockly.Blocks["subw"] = {
       .appendField(",");
 
     this.appendValueInput("DEST")
-      .setCheck(TYPES.REG)
+      .setCheck(TYPES.REG_DEST, TYPES.MEM)
       .appendField(",");
 
     this.setPreviousStatement(true);
