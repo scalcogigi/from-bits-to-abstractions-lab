@@ -10,7 +10,8 @@ export const toolbox = {
 		{ kind: "block", type: "reg_A" },
 		{ kind: "block", type: "reg_D" },
 		{ kind: 'block', type: 'mem' },
-		{ kind: 'block', type: 'im' }
+		{ kind: 'block', type: 'im' },
+		{ kind: 'block', type: 'constante' }
       ]
     },
     {
@@ -40,6 +41,7 @@ export const toolbox = {
       'contents': [
         { kind: "block", type: "comment" },
         { kind: "block", type: "label" },
+        { kind: "block", type: "label_ref" },
         { kind: "block", type: "jmp" },
         { kind: "block", type: "je" },
         { kind: "block", type: "jne" },

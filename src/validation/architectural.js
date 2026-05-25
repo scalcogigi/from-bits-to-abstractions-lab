@@ -1,10 +1,15 @@
 import { ValidationCategories } from './types.js';
+import { parseImmediateArg } from '../utils/immediate.js';
 
-export function checkArchitectural(ast) {
-  ast.instructions.forEach(instr => {
-  console.log("DEST CHECK:", instr.type, instr.args);
-});
+function movwDestIsRegisterA(workspace, instr) {
+  const block = workspace.getBlockById(instr.id);
+  if (!block || block.type !== 'movw') return false;
 
+  const destBlock = block.getInputTargetBlock('DEST');
+  return destBlock?.type === 'reg_A';
+}
+
+export function checkArchitectural(ast, workspace = null) {
   const errors = [];
 
   // Helper semânticos
@@ -15,6 +20,19 @@ export function checkArchitectural(ast) {
 
   function isImmediate(arg) {
     return typeof arg === 'string' && arg.startsWith('$');
+  }
+
+  const ISA_IMMEDIATE_MAX = 65535;
+  const ISA_SMALL_IMMEDIATES = new Set([-1, 0, 1]);
+
+  function isValidIsaImmediate(arg) {
+    if (!isImmediate(arg)) return true;
+
+    const num = parseImmediateArg(arg);
+    if (num === null) return true;
+
+    if (ISA_SMALL_IMMEDIATES.has(num)) return true;
+    return num >= 2 && num <= ISA_IMMEDIATE_MAX;
   }
 
   // Leitura + escrita de memória no mesmo ciclo
@@ -105,25 +123,40 @@ export function checkArchitectural(ast) {
     }
   });
 
-  // Imediatos inválidos
+  if (workspace) {
+    ast.instructions.forEach(instr => {
+      if (instr.type !== 'movw') return;
+      if (!movwDestIsRegisterA(workspace, instr)) return;
 
-  const validImmediates = ['$0', '$1', '$-1'];
+      errors.push({
+        blockId: instr.id,
+        category: ValidationCategories.ARQUITETURAL,
+        message:
+          'O registrador %A não pode ser usado como destino de movw.\n' +
+          '%A pode aparecer no segundo operando, mas não no campo de destino.\n\n' +
+          'Sugestão:\n' +
+          'Use %A em SRC2 ou use %D / memória em DEST.'
+      });
+    });
+  }
+
+  // Imediatos inválidos ($-1/$0/$1 ou constantes $0–$65535)
 
   ast.instructions.forEach(instr => {
     if (!instr.args) return;
 
     instr.args.forEach(arg => {
-      if (isImmediate(arg) && !validImmediates.includes(arg)) {
-        errors.push({
-          blockId: instr.id,
-          category: ValidationCategories.ARQUITETURAL,
-          message:
-            `O valor imediato ${arg} não existe na arquitetura Z01.\n` +
-            'A ISA suporta apenas $0, $1 e $-1.\n\n' +
-            'Sugestão:\n' +
-            'Construa valores maiores usando operações aritméticas.'
-        });
-      }
+      if (isValidIsaImmediate(arg)) return;
+
+      errors.push({
+        blockId: instr.id,
+        category: ValidationCategories.ARQUITETURAL,
+        message:
+          `O valor imediato ${arg} não é válido na ISA Z01.\n` +
+          'Use o bloco imediato ($0, $1, $-1) ou constante ($0 a $65535).\n\n' +
+          'Sugestão:\n' +
+          'Troque o operando ou ajuste o valor.'
+      });
     });
   });
 

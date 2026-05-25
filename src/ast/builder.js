@@ -1,3 +1,5 @@
+import { immediateFromField } from '../utils/immediate.js';
+
 export function buildAST(workspace) {
   const instructions = [];
 
@@ -42,7 +44,15 @@ function extractArgs(block) {
         }
 
         case child.type === 'im':
-          args.push(child.getFieldValue('VALUE'));
+        case child.type === 'constante': {
+          const imm = immediateFromField(child.getFieldValue('VALUE'));
+          if (imm) args.push(imm);
+          break;
+        }
+
+        case child.type === 'label':
+        case child.type === 'label_ref':
+          args.push(child.getFieldValue('NAME'));
           break;
 
         default:

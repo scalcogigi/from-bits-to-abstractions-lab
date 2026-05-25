@@ -11,6 +11,31 @@ body {
   font-family: monospace;
   font-size: 14px;
   flex: 1;
+  border: 2px solid transparent;
+}
+
+#assemblyPanel.assembly-panel--error #output {
+  border-color: #ef4444;
+  background: #1f1111;
+}
+
+#assemblyPanel.assembly-panel--error .assembly-incomplete-hint {
+  display: block;
+}
+
+.assembly-incomplete-hint {
+  display: none;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #450a0a;
+  color: #fecaca;
+  font-size: 13px;
+}
+
+#btnCopy:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .layout {

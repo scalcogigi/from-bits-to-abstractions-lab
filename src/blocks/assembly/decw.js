@@ -1,10 +1,11 @@
 import * as Blockly from "blockly/core";
 import { TYPES } from "../core/types.js";
+import { typeCheck } from "../checks.js";
 
 Blockly.Blocks["decw"] = {
   init: function () {
     this.appendValueInput("REG")
-      .setCheck([TYPES.REG_DEST])
+      .setCheck(typeCheck([TYPES.REG_DEST]))
       .appendField("decw");
 
     this.setPreviousStatement(true);

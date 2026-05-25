@@ -1,19 +1,34 @@
 import * as Blockly from 'blockly/core';
 import { TYPES } from './types.js';
+import { isModoLivre } from '../../mode.js';
+import { typeCheck } from '../checks.js';
 
 Blockly.Blocks['im'] = {
   init: function () {
-    this.appendDummyInput()
-      .appendField("constante")
-      .appendField(
-        new Blockly.FieldNumber(0, 0, 65535, 1), "VALUE");
-    this.setOutput(true, [TYPES.IMM]);
+    const row = this.appendDummyInput().appendField('imediato');
+
+    if (isModoLivre()) {
+      row
+        .appendField('$')
+        .appendField(new Blockly.FieldNumber(0, -32768, 65535, 1), 'VALUE');
+    } else {
+      row.appendField(
+        new Blockly.FieldDropdown([
+          ['$0', '0'],
+          ['$1', '1'],
+          ['$-1', '-1'],
+        ]),
+        'VALUE'
+      );
+    }
+
+    this.setOutput(true, typeCheck([TYPES.IMM]));
     this.setOutputShape(2);
     this.setColour(200);
-    this.setTooltip("Imediatos válidos da arquitetura: $1, $0 e $-1");
-  }
+    this.setTooltip(
+      isModoLivre()
+        ? 'Imediato livre.'
+        : 'Imediato da ISA: apenas $0, $1 e $-1.'
+    );
+  },
 };
-
-// ISA doesn't accept arbitrary immediates, addw/subw/movw no longer break
-// and it removes the risk of writing something impossible
-// immediates valids $1, $0, $-1
