@@ -1,5 +1,3 @@
-import './mode.js';
-
 import * as Blockly from 'blockly/core';
 import 'blockly/blocks';
 import 'blockly/msg/pt-br';
@@ -8,7 +6,6 @@ import './style/main.css';
 import './blocks/core/reg.js';
 import './blocks/core/mem.js';
 import './blocks/core/im.js';
-import './blocks/core/constante.js';
 
 import { toolbox } from './toolbox/toolbox.js';
 import { load, save } from './serialization.js';
@@ -31,7 +28,6 @@ import './blocks/assembly/orw.js';
 import './blocks/assembly/nop.js';
 
 import './blocks/control/label.js';
-import './blocks/control/label_ref.js';
 import './blocks/control/jmp.js';
 import './blocks/control/je.js';
 import './blocks/control/jne.js';
@@ -41,11 +37,14 @@ import './blocks/control/jl.js';
 import './blocks/control/jle.js';
 
 import { buildAST } from './ast/builder.js';
-import { validateProgram } from './validation/index.js';
+import { validateProgram, setModoLivre } from './validation/index.js';
 import { ErrorManager } from './ui/ErrorManager.js';
 
 import assemblyGenerator from './generator/assembly.js';
 
+console.log("assemblyGenerator:", assemblyGenerator);
+
+// create workspace
 const workspace = Blockly.inject(document.getElementById('blocklyDiv'), {
   toolbox: toolbox,
   renderer: 'geras',
@@ -54,7 +53,7 @@ const workspace = Blockly.inject(document.getElementById('blocklyDiv'), {
   zoom: { wheel: true, startScale: 1 }
 });
 
-enableToolboxHover(workspace);
+enableToolboxHover(workspace); 
 
 function enableToolboxHover(workspace) {
   const toolbox = workspace.getToolbox();
@@ -72,83 +71,100 @@ function enableToolboxHover(workspace) {
         }
       });
     });
-  }, 0);
+  }, 0); 
 }
+
+const params = new URLSearchParams(window.location.search);
+const modoLivreAtivo = params.get("modo") === "livre";
+
+setModoLivre(modoLivreAtivo);
 
 const errorManager = new ErrorManager(workspace);
 
 const btnCopy = document.getElementById('btnCopy');
 const output = document.getElementById('output');
-const assemblyPanel = document.getElementById('assemblyPanel');
-
-function setAssemblyPanelState({ valid, message = '' }) {
-  if (valid) {
-    assemblyPanel.classList.remove('assembly-panel--error');
-    btnCopy.disabled = false;
-    return;
-  }
-
-  assemblyPanel.classList.add('assembly-panel--error');
-  btnCopy.disabled = true;
-  output.textContent = message;
-}
 
 function updateAssembly() {
   errorManager.clearAll();
 
   const ast = buildAST(workspace);
-  const errors = validateProgram(ast, workspace);
+  const errors = validateProgram(ast);
 
   if (errors.length > 0) {
     errorManager.showErrors(errors);
-    setAssemblyPanelState({ valid: false, message: '' });
+    output.style.backgroundColor = "#4a1f1f";
+    output.textContent = errors.map(e => e.message).join('\n');
+    btnCopy.disabled = true;
     return;
   }
 
-  setAssemblyPanelState({ valid: true });
-
   try {
     const code = assemblyGenerator.workspaceToCode(workspace);
-    const trimmedCode = code.trim();
 
-    if (!trimmedCode) {
-      output.textContent = '';
+    if (!code || code.trim() === "") {
+      output.style.backgroundColor = "#4a1f1f";
+      output.textContent= "Preencha todos os campos obrigatórios.";
+      btnCopy.disabled = true;
       return;
     }
 
+    output.style.backgroundColor = "#0f172a";
     output.textContent = code;
+    btnCopy.disabled = false;
+
   } catch (e) {
-    setAssemblyPanelState({ valid: false, message: '' });
+    output.style.borderColor = "#4a1f1f";
     output.textContent = 'Erro Assembly: ' + e.message;
+    btnCopy.disabled = true;
     console.error(e);
   }
 }
 
+// Load saved workspace
 load(workspace);
 updateAssembly();
+
+
+// -------------------- buttons ---------------------------
 
 const btnNew = document.getElementById('btnNew');
 
 btnNew.addEventListener('click', () => {
   if (confirm('Deseja iniciar um novo workspace? Todo o conteúdo atual será apagado.')) {
-    workspace.clear();
+    workspace.clear(); 
     errorManager.clearAll();
     output.textContent = '';
-    setAssemblyPanelState({ valid: true });
-    localStorage.removeItem('jsonGeneratorWorkspace');
+    localStorage.removeItem('jsonGeneratorWorkspace'); 
   }
 });
 
 btnCopy.addEventListener('click', () => {
-  if (btnCopy.disabled) return;
-  navigator.clipboard.writeText(output.textContent);
+  const text = output.textContent;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text);
+  } else {
+    const textarea = document.createElement('textarea');
+
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-999999px';
+
+    document.body.appendChild(textarea);
+
+    textarea.focus();
+    textarea.select();
+
+    document.execCommand('copy');
+
+    textarea.remove();
+  }
 });
 
 let updateTimeout = null;
 
 workspace.addChangeListener((event) => {
   if (event.type === Blockly.Events.UI) return;
-  if (event.type === Blockly.Events.BLOCK_FIELD_INTERMEDIATE_CHANGE) return;
 
   save(workspace);
 
