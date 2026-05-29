@@ -1,4 +1,4 @@
-import Blockly from '../../../blockly.js';
+import Blockly from '../../blockly.js';
 import { TYPES } from "../core/types.js";
 
 Blockly.Blocks["label_ref"] = {

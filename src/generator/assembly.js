@@ -248,12 +248,4 @@ assemblyGenerator.workspaceToCode = function (workspace) {
 
 };
 
-if (
-  event.type !== Blockly.Events.BLOCK_CHANGE &&
-  event.type !== Blockly.Events.BLOCK_CREATE &&
-  event.type !== Blockly.Events.BLOCK_DELETE
-) {
-  return;
-}
-
 export default assemblyGenerator;

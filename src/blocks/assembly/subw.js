@@ -1,4 +1,4 @@
-import Blockly from '../../../blockly.js';
+import Blockly from '../../blockly.js';
 import { TYPES } from "../core/types.js";
 import { typeCheck } from "../checks.js";
 

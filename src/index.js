@@ -37,7 +37,7 @@ import './blocks/control/jl.js';
 import './blocks/control/jle.js';
 
 import { buildAST } from './ast/builder.js';
-import { validateProgram, setModoLivre } from './validation/index.js';
+import { validateProgram } from './validation/index.js';
 import { ErrorManager } from './ui/ErrorManager.js';
 
 import assemblyGenerator from './generator/assembly.js';

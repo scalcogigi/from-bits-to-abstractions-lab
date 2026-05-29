@@ -1,4 +1,4 @@
-import Blockly from '../../../blockly.js';
+import Blockly from '../../blockly.js';
 
 Blockly.Blocks["nop"] = {
   init: function () {
