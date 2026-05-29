@@ -1,4 +1,4 @@
-import * as Blockly from 'blockly/core';
+import Blockly from '../../blockly.js';
 import { TYPES } from './types.js';
 import { isModoLivre } from '../../mode.js';
 import { typeCheck } from '../checks.js';

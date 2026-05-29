@@ -1,6 +1,5 @@
-import * as Blockly from 'blockly/core';
+import Blockly from '../blockly.js';
 import { reportError } from "../utils/error.js";
-import { immediateFromField } from "../utils/immediate.js";
 
 const assemblyGenerator = new Blockly.Generator('Assembly');
 
@@ -28,9 +27,17 @@ function flattenWorkspace(workspace) {
 }
 
 
-// Referências de label (ex.: leaw LOOP) podem repetir o mesmo nome sem erro.
-function collectLabels() {
-  return {};
+// validação de labels
+function collectLabels(blocks) {
+  const labels = new Set();
+  for (const block of blocks) {
+    if (block.type === "label") {
+      const name = block.getFieldValue("NAME");
+      if (labels.has(name)) return { error: `Label duplicada: ${name}` };
+      labels.add(name);
+    }
+  }
+  return { labels };
 }
 
 // instruções
@@ -44,39 +51,18 @@ assemblyGenerator.forBlock['leaw'] = function (block) {
   return `leaw ${c}, %A`;
 };
 
-function movwOperands(block) {
-  return {
-    src1: value(block, "SRC1"),
-    src2: value(block, "SRC2"),
-    dest: value(block, "DEST"),
-  };
-}
+assemblyGenerator.forBlock['movw'] = assemblyGenerator.forBlock['movw'] = function(block) {
+  const src = value(block, "SRC");
+  const dest = value(block, "DEST");
 
-assemblyGenerator.forBlock["movw"] = function (block) {
-  const { src1, src2, dest } = movwOperands(block);
-  const filled = [src1, src2, dest].filter(Boolean);
-
-  if (filled.length < 2) {
+  if (!src || !dest) {
     return "";
   }
 
-  if (src1 && src2 && dest) {
-    return `movw ${src1}, ${src2}, ${dest}`;
-  }
-  if (src1 && dest) {
-    return `movw ${src1}, ${dest}`;
-  }
-  if (src1 && src2) {
-    return `movw ${src1}, ${src2}`;
-  }
-  if (src2 && dest) {
-    return `movw ${src2}, ${dest}`;
-  }
-
-  return "";
+  return `movw ${src}, ${dest}`;
 };
 
-assemblyGenerator.forBlock["addw"] = function (block) {
+assemblyGenerator.forBlock['addw'] = function(block) {
   const a = value(block, "A");
   const b = value(block, "B");
   const dest = value(block, "DEST");
@@ -180,16 +166,15 @@ assemblyGenerator.forBlock["orw"] = function (block) {
   return `orw ${a}, ${b}, ${dest}`;
 };
 
-assemblyGenerator.forBlock["label_ref"] = function (block) {
-  return [block.getFieldValue("NAME"), Order.ATOMIC];
-};
+assemblyGenerator.forBlock['label'] = function(block) {
+  const name = block.getFieldValue('NAME');
 
-// Definição no fluxo; workspaces antigos podem ainda usar label como operando
-assemblyGenerator.forBlock["label"] = function (block) {
-  const name = block.getFieldValue("NAME");
-  if (block.outputConnection?.targetConnection) {
+  // se estiver conectado como valor
+  if (block.outputConnection && block.outputConnection.targetConnection) {
     return [name, Order.ATOMIC];
   }
+
+  // se for definição
   return `${name}:`;
 };
 
@@ -207,13 +192,10 @@ assemblyGenerator.forBlock["jl"] = (block) => `jl`;
 assemblyGenerator.forBlock["jle"] = (block) => `jle`;
 
 // terminais
-function immediateCode(block) {
-  const imm = immediateFromField(block.getFieldValue("VALUE"));
-  return imm ? [imm, Order.ATOMIC] : ["", Order.ATOMIC];
-}
-
-assemblyGenerator.forBlock["im"] = immediateCode;
-assemblyGenerator.forBlock["constante"] = immediateCode;
+assemblyGenerator.forBlock["im"] = function(block) {
+  const val = block.getFieldValue("VALUE");
+  return [`$${val}`, Order.ATOMIC];
+};
 
 assemblyGenerator.forBlock["mem"] = function(block) {
   return ["(%A)", Order.ATOMIC];
@@ -252,16 +234,26 @@ assemblyGenerator.workspaceToCode = function (workspace) {
 
   executable.sort((a, b) => a.y - b.y);
 
-  return executable
-  .map(b => {
+  const lines = executable.map(b => {
   const code = this.blockToCode(b);
   return typeof code === "string" ? code.trim() : "";
 })
 .filter(line => line.length > 0)
-.join("\n") + "\n";
 
+  if (lines.length === 0) {
+    return "";
+  }
+
+  return lines.join("\n");
 
 };
 
+if (
+  event.type !== Blockly.Events.BLOCK_CHANGE &&
+  event.type !== Blockly.Events.BLOCK_CREATE &&
+  event.type !== Blockly.Events.BLOCK_DELETE
+) {
+  return;
+}
 
 export default assemblyGenerator;

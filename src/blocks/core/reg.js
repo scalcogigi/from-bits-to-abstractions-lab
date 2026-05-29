@@ -1,4 +1,4 @@
-import * as Blockly from 'blockly/core';
+import Blockly from '../../blockly.js';
 import { TYPES } from './types.js';
 
 Blockly.Blocks['reg_A'] = {
