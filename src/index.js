@@ -119,8 +119,19 @@ function updateAssembly() {
 }
 
 // Load saved workspace
-load(workspace);
-updateAssembly();
+// load(workspace);
+// updateAssembly();
+setTimeout(() => {
+  Blockly.Events.disable();
+
+  load(workspace);
+
+  Blockly.Events.enable();
+
+  requestAnimationFrame(() => {
+    updateAssembly();
+  });
+}, 0);
 
 
 // -------------------- buttons ---------------------------
