@@ -51,15 +51,18 @@ assemblyGenerator.forBlock['leaw'] = function (block) {
   return `leaw ${c}, %A`;
 };
 
-assemblyGenerator.forBlock['movw'] = assemblyGenerator.forBlock['movw'] = function(block) {
-  const src = value(block, "SRC");
+assemblyGenerator.forBlock['movw'] = function(block) {
+  const src1 = value(block, "SRC1");
+  const src2 = value(block, "SRC2");
   const dest = value(block, "DEST");
 
-  if (!src || !dest) {
+  const operands = [src1, src2, dest].filter(Boolean);
+
+  if (operands.length < 2) {
     return "";
   }
 
-  return `movw ${src}, ${dest}`;
+  return `movw ${operands.join(", ")}`;
 };
 
 assemblyGenerator.forBlock['addw'] = function(block) {
@@ -166,7 +169,7 @@ assemblyGenerator.forBlock["orw"] = function (block) {
   return `orw ${a}, ${b}, ${dest}`;
 };
 
-assemblyGenerator.forBlock['label'] = function(block) {
+assemblyGenerator.forBlock['label_ref'] = function(block) {
   const name = block.getFieldValue('NAME');
 
   // se estiver conectado como valor
@@ -193,6 +196,11 @@ assemblyGenerator.forBlock["jle"] = (block) => `jle`;
 
 // terminais
 assemblyGenerator.forBlock["im"] = function(block) {
+  const val = block.getFieldValue("VALUE");
+  return [`$${val}`, Order.ATOMIC];
+};
+
+assemblyGenerator.forBlock["constante"] = function(block) {
   const val = block.getFieldValue("VALUE");
   return [`$${val}`, Order.ATOMIC];
 };

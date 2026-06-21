@@ -6,6 +6,7 @@ import './style/main.css';
 import './blocks/core/reg.js';
 import './blocks/core/mem.js';
 import './blocks/core/im.js';
+import './blocks/core/constante.js';
 
 import { toolbox } from './toolbox/toolbox.js';
 import { load, save } from './serialization.js';
@@ -28,6 +29,7 @@ import './blocks/assembly/orw.js';
 import './blocks/assembly/nop.js';
 
 import './blocks/control/label.js';
+import './blocks/control/label_ref.js';
 import './blocks/control/jmp.js';
 import './blocks/control/je.js';
 import './blocks/control/jne.js';
@@ -74,10 +76,6 @@ function enableToolboxHover(workspace) {
   }, 0); 
 }
 
-const params = new URLSearchParams(window.location.search);
-const modoLivreAtivo = params.get("modo") === "livre";
-
-setModoLivre(modoLivreAtivo);
 
 const errorManager = new ErrorManager(workspace);
 

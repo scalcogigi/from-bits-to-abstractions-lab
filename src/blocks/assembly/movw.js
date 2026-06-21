@@ -20,7 +20,7 @@ Blockly.Blocks["movw"] = {
     this.setNextStatement(true);
     this.setColour(230);
     this.setTooltip(
-      "Move dados entre registrador e memória. Preencha pelo menos dois dos três campos."
+      "movw aceita 2 ou 3 operandos. É necessário preencher pelo menos dois campos."
     );
   },
 };

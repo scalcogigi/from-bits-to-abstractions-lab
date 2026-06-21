@@ -7,7 +7,7 @@ Blockly.Blocks["leaw"] = {
     this.setInputsInline(true);
 
     this.appendValueInput("CONST")
-      .setCheck(typeCheck([TYPES.IMM, TYPES.LABEL_REF]))
+      .setCheck(typeCheck([TYPES.IMM, TYPES.LABEL_REF, TYPES.REG_A]))
       .appendField("leaw");
 
     this.appendDummyInput().appendField(", %A");
