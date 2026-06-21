@@ -44,6 +44,8 @@ import { ErrorManager } from './ui/ErrorManager.js';
 
 import assemblyGenerator from './generator/assembly.js';
 
+console.time("startup");
+
 console.log("assemblyGenerator:", assemblyGenerator);
 
 // create workspace
@@ -120,7 +122,9 @@ function updateAssembly() {
 
 // Load saved workspace
 // load(workspace);
-// updateAssembly();
+updateAssembly();
+console.timeEnd("startup");
+
 setTimeout(() => {
   Blockly.Events.disable();
 
