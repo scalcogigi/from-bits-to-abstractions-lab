@@ -4,6 +4,9 @@ import { typeCheck } from "../checks.js";
 
 Blockly.Blocks["movw"] = {
   init: function () {
+
+    this.setInputsInline(true);
+    
     this.appendValueInput("SRC1")
       .setCheck(typeCheck([TYPES.REG, TYPES.MEM]))
       .appendField("movw");

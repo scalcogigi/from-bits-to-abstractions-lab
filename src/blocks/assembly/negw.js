@@ -4,6 +4,9 @@ import { typeCheck } from "../checks.js";
 
 Blockly.Blocks["negw"] = {
   init: function () {
+
+    this.setInputsInline(true);
+    
     this.appendValueInput("REG")
       .setCheck(typeCheck([TYPES.REG_DEST]))
       .appendField("negw");
