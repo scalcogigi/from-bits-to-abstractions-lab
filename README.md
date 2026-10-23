@@ -19,6 +19,10 @@ Through this approach, the project seeks to bring students closer to the foundat
 
 The project “Analyzing the Use of Visual Programming in Teaching Assembly” proposes an innovative and interactive approach to teaching concepts traditionally considered complex. By combining block-based visualization with automatic translation to Assembly, students can incrementally understand the correspondence between high-level logic and its representation in machine-level code.
 
+## Deployment link
+
+https://github.com/scalcogigi/from-bits-to-abstractions-lab
+
 ## Local Execution
 
 To run the project locally, Node.js and npm (Node Package Manager) must be installed on your system.
