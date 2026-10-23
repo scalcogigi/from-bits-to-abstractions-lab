@@ -21,7 +21,7 @@ The project “Analyzing the Use of Visual Programming in Teaching Assembly” p
 
 ## Deployment link
 
-https://github.com/scalcogigi/from-bits-to-abstractions-lab
+http://3.134.105.93:3000
 
 ## Local Execution
 
